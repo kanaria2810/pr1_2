@@ -1,0 +1,69 @@
+1. BookManager => Book manager in a library
+
+    + list all books
+    + add a new book
+    + edit book
+    + delete a book
+    + search books by name
+    + sort books descending by price
+    + save and exit
+
+2. Load books from file book.txt
+=> reads the file
+=> parses the data for Book objects => print out the message : Loading books...
+=> add to the list of books (id, name, price)
+
+3. List all books
+
+=> display a list of all books in a tabular form
+=> No books : (empty)
+=> Output: "%-5s %-45s %-10s" heading
+=> Output: "%5d %-45s %10.2f" Book details
+=> Double datatype: 2 digits after the decimal
+
+4. Add a new book
+=> Input: book details from user
+    - Enter book id
+    - Enter book name
+    - Enter book price
+=> output: notify user whether success or not:
+    - success : "Added successfully."
+    - not success : "Duplicated ID!"
+
+5. Edit book
+- Input : enter book ID 
+    => ID not exists : "Invalid ID!"
+    => exits: get details from user then update the book object
+        - Enter book id
+        - Enter book name
+        - Enter book price
+        => Result: "Update successfully."/"Invalid ID!"
+
+6. Delete a book
+- Input: book id
+- Result : "Deleted successfully."/"Invalid ID!"
+
+7. search books by name
+- Input: keyword from user
+- Process: filter Book objects in the list of books with name contains keyword
+            - case insensitive
+            - print out: tabular form/ "(empty)
+
+8. Sort books by price
+- Output: sort books descending by price
+=> like list all books
+
+9. Save and exit
+- Save all books into books.txt in required format
+- end program
+- no book => write nothing to the file
+- Output: Saving to file...
+            Bye!
+
+10. Book OK
+- constructor
+- setName ();
+- setPrice();
+- toString();
+
+11. BookManager
