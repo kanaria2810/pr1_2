@@ -1,9 +1,6 @@
 package main.java.pr1;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+
+import java.io.*;
 import java.util.*;
 
 
@@ -101,7 +98,6 @@ public class BookManager {
         for (Book b : this.books) {
             if (b.equals(book)) {
                 this.books.remove(b);
-                System.out.println("Deleted successfully!");
                 return;
             }
         }

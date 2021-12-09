@@ -3,129 +3,30 @@
  */
 package main.java.pr1;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import main.java.pr1.commands.*;
+
 public class Main {
 
-    private interface Command {
-        public void excecute();
-    }
-
-    BookManager bookManager;
-    Scanner scanner;
     Map<Integer, Command> commands = new HashMap<>();
 
-    public Main (Scanner scanner) {
-        bookManager = new BookManager();
-        this.scanner = scanner;
-
-        try {
-            bookManager.loadFromFile();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        Command listAllBooks = () -> {
-            bookManager.printBooks(bookManager.getBooks());
-        };
-        commands.put(1, listAllBooks);
-
-        Command addNewBook = () -> {
-
-            System.out.print("Enter book id: ");
-            int id = scanner.nextInt(); 
-            scanner.nextLine();
-
-            System.out.print("Enter book name: ");
-            String name = scanner.next();
-            scanner.nextLine();
-
-            System.out.print("Enter book price: ");
-            double price = scanner.nextDouble();
-
-            boolean isAdded = bookManager.add(new Book(id, name, price));
-
-            if (isAdded) {
-                System.out.println("Added successfully.");
-            } else System.out.println("Added failed");
-
-        };
-        commands.put(2, addNewBook);
-
-        Command editBook = () -> {
-            System.out.print("Enter book id: ");
-            int id = scanner.nextInt(); 
-            scanner.nextLine();
-
-            System.out.print("Enter book name: ");
-            String name = scanner.next();
-            scanner.nextLine();
-            
-            System.out.print("Enter book price: ");
-            double price = scanner.nextDouble();
-
-            Book book = bookManager.getBookById(id);
-            bookManager.delete(book);
-            boolean isAdded = bookManager.add(new Book(id, name, price));
-
-            if (isAdded) {
-                System.out.println("Updated successfully.");
-            } else System.out.println("Updated failed");
-        };
-        commands.put(3, editBook);
-
-        Command deleteBook = () -> {
-            System.out.print("Enter book id: ");
-            int id = scanner.nextInt(); 
-
-            Book book = bookManager.getBookById(id);
-            bookManager.delete(book);
-        };
-        commands.put(4, deleteBook);
-
-        Command searchBookByName = () -> {
-            
-            System.out.print("Enter keyword: ");
-            String keyword = scanner.next();
-            scanner.nextLine();
-
-            bookManager.printBooks(bookManager.searchByName(keyword));
-        };
-        commands.put(5, searchBookByName);
-
-        Command sortBookByPriceDesc = () -> {
-            bookManager.sortDescByPrice();
-            System.out.println("After sorting: ");
-            bookManager.printBooks(bookManager.getBooks());
-        };
-        commands.put(6, sortBookByPriceDesc);
-
-        Command saveAndExit = () -> {
-            bookManager.saveToFile();
-            System.out.println("Bye!");
-        };
-        commands.put(0, saveAndExit);
-
-    };
-
+    public void addCommand (int commandId, Command command) {
+        commands.put(commandId, command);
+    }
 
     public void showAllOption() {
         System.out.println("-----------------------------------");
 
-        String allOption = "1. list all books \n" +
-                            "2. add a new book \n" +
-                            "3. edit book \n" +
-                            "4. delete a book \n" +
-                            "5. search books by name \n" + 
-                            "6. sort books descending by price \n \n" + 
-                            "0. save & exit";
+        commands.keySet().forEach(commandId -> {
+            if (commandId != 0) {
+                System.out.println(commandId + ". " + commands.get(commandId).getDescription());
+            }
+        });
 
-        System.out.println(allOption);
+        System.out.println("\n \n0. " + commands.get(0).getDescription());
         System.out.println("-----------------------------------");
     }
 
@@ -140,8 +41,25 @@ public class Main {
 
     public static void main(String[] args) {
 
+        BookManager bookManager = new BookManager();        
+        Main main = new Main();
+
+        try {
+            bookManager.loadFromFile();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         Scanner scanner = new Scanner(System.in);
-        Main main = new Main(scanner);
+        
+        main.addCommand(0, new SaveAndExit(bookManager, scanner));
+        main.addCommand(1, new ListAllBooks(bookManager));
+        main.addCommand(2, new AddNewBook(bookManager, scanner));
+        main.addCommand(3, new EditBook(bookManager, scanner));
+        main.addCommand(4, new DeleteBook(bookManager, scanner));
+        main.addCommand(5, new SearchBookByName(bookManager, scanner));
+        main.addCommand(6, new SortBookByPriceDesc(bookManager));
 
         int id;
         do {
@@ -153,9 +71,6 @@ public class Main {
             main.excecuteOption(id);
 
         } while (id != 0);
-
-        scanner.close();
-
     }
 
 }
