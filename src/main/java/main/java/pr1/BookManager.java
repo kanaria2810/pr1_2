@@ -45,8 +45,6 @@ public class BookManager {
                 line = br.readLine();
             }
 
-            printBooks(this.books);
-
 			br.close();
 
 		} catch (IOException e) {
@@ -103,8 +101,11 @@ public class BookManager {
         for (Book b : this.books) {
             if (b.equals(book)) {
                 this.books.remove(b);
+                System.out.println("Deleted successfully!");
+                return;
             }
         }
+        System.out.println("Invalid ID!");
     }
 
     /**

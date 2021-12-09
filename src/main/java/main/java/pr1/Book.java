@@ -1,4 +1,7 @@
 package main.java.pr1;
+
+import java.util.Locale;
+
 public class Book {
     int id;
     String name;
@@ -23,6 +26,6 @@ public class Book {
      */
     @Override
     public String toString() {
-        return String.format("%5d %-45s %10.2f", this.id, this.name, this.price);
+        return String.format(Locale.ROOT, "%5d %-45s %10.2f", this.id, this.name, this.price);
     }
 }

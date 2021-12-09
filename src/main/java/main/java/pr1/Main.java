@@ -16,10 +16,12 @@ public class Main {
     }
 
     BookManager bookManager;
-    Map<String, Command> commands = new HashMap<>();
+    Scanner scanner;
+    Map<Integer, Command> commands = new HashMap<>();
 
-    public Main () {
+    public Main (Scanner scanner) {
         bookManager = new BookManager();
+        this.scanner = scanner;
 
         try {
             bookManager.loadFromFile();
@@ -31,19 +33,129 @@ public class Main {
         Command listAllBooks = () -> {
             bookManager.printBooks(bookManager.getBooks());
         };
+        commands.put(1, listAllBooks);
 
-        commands.put("list all books", listAllBooks);
+        Command addNewBook = () -> {
 
-    }
-    public static void main(String[] args) {
+            System.out.print("Enter book id: ");
+            int id = scanner.nextInt(); 
+            scanner.nextLine();
 
-        Main main = new Main();
-        main.showAllOption();
-    }
+            System.out.print("Enter book name: ");
+            String name = scanner.next();
+            scanner.nextLine();
+
+            System.out.print("Enter book price: ");
+            double price = scanner.nextDouble();
+
+            boolean isAdded = bookManager.add(new Book(id, name, price));
+
+            if (isAdded) {
+                System.out.println("Added successfully.");
+            } else System.out.println("Added failed");
+
+        };
+        commands.put(2, addNewBook);
+
+        Command editBook = () -> {
+            System.out.print("Enter book id: ");
+            int id = scanner.nextInt(); 
+            scanner.nextLine();
+
+            System.out.print("Enter book name: ");
+            String name = scanner.next();
+            scanner.nextLine();
+            
+            System.out.print("Enter book price: ");
+            double price = scanner.nextDouble();
+
+            Book book = bookManager.getBookById(id);
+            bookManager.delete(book);
+            boolean isAdded = bookManager.add(new Book(id, name, price));
+
+            if (isAdded) {
+                System.out.println("Updated successfully.");
+            } else System.out.println("Updated failed");
+        };
+        commands.put(3, editBook);
+
+        Command deleteBook = () -> {
+            System.out.print("Enter book id: ");
+            int id = scanner.nextInt(); 
+
+            Book book = bookManager.getBookById(id);
+            bookManager.delete(book);
+        };
+        commands.put(4, deleteBook);
+
+        Command searchBookByName = () -> {
+            
+            System.out.print("Enter keyword: ");
+            String keyword = scanner.next();
+            scanner.nextLine();
+
+            bookManager.printBooks(bookManager.searchByName(keyword));
+        };
+        commands.put(5, searchBookByName);
+
+        Command sortBookByPriceDesc = () -> {
+            bookManager.sortDescByPrice();
+            System.out.println("After sorting: ");
+            bookManager.printBooks(bookManager.getBooks());
+        };
+        commands.put(6, sortBookByPriceDesc);
+
+        Command saveAndExit = () -> {
+            bookManager.saveToFile();
+            System.out.println("Bye!");
+        };
+        commands.put(0, saveAndExit);
+
+    };
+
 
     public void showAllOption() {
-        this.commands.keySet().forEach(action -> {
-            System.out.println(action);
-        });
+        System.out.println("-----------------------------------");
+
+        String allOption = "1. list all books \n" +
+                            "2. add a new book \n" +
+                            "3. edit book \n" +
+                            "4. delete a book \n" +
+                            "5. search books by name \n" + 
+                            "6. sort books descending by price \n \n" + 
+                            "0. save & exit";
+
+        System.out.println(allOption);
+        System.out.println("-----------------------------------");
     }
+
+    public void excecuteOption(int commandId) {
+        Command command = this.commands.get(commandId);
+        if (command == null) {
+            System.out.println("Invalid option!");
+            return;
+        }
+        command.excecute();
+    }
+
+    public static void main(String[] args) {
+
+        Scanner scanner = new Scanner(System.in);
+        Main main = new Main(scanner);
+
+        int id;
+        do {
+            main.showAllOption();
+
+            System.out.print("Your option: ");
+            id = scanner.nextInt(); 
+
+            main.excecuteOption(id);
+
+        } while (id != 0);
+
+        scanner.close();
+
+    }
+
 }

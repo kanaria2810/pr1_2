@@ -6,8 +6,9 @@ package main.java.pr1;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class AppTest {
-    @Test public void testAppHasAGreeting() {
-        Main classUnderTest = new Main();
-    }
-}
+// public class AppTest {
+//     @Test public void testAppHasAGreeting() {
+
+//         Main classUnderTest = new Main();
+//     }
+// }
