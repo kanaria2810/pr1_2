@@ -1,8 +1,8 @@
 package main.java.pr1;
 public class Book {
     int id;
-    private String name;
-    private double price;
+    String name;
+    double price;
 
     public Book(int id, String name, double price) {
         this.id = id;

@@ -9,9 +9,23 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         BookManager bookManager = new BookManager();
+
         try {
             bookManager.loadFromFile();
+
+            System.out.println("***");
+
+            Book book1 = new Book(4, "ahihi", 10.02);
+
+            bookManager.add(book1);
+            bookManager.add(new Book(5, "ihaha", 100));
             
+            bookManager.sortDescByPrice();
+
+            ArrayList<Book> matches = bookManager.searchByName("people");
+
+            bookManager.saveToFile();
+
         } catch (Exception e) {
             e.printStackTrace();
         }

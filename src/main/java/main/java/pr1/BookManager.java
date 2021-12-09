@@ -1,11 +1,9 @@
 package main.java.pr1;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.BufferedWriter;
 import java.io.FileReader;
-import java.io.IOError;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.*;
 
 
@@ -27,7 +25,7 @@ public class BookManager {
     /**
      * update this.books by reading books from file books.txt
      */
-    public void loadFromFile() throws IOException {
+    public void loadFromFile() {
         System.out.println("Loading books...");
 		try {
 
@@ -51,7 +49,7 @@ public class BookManager {
 
 			br.close();
 
-		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("\nAn error occured. Check your filename and your permissions.");
 		}
@@ -111,7 +109,46 @@ public class BookManager {
      * update this.books to be sorted by price from high -> low
      */
     public void sortDescByPrice() {
-        // TODO: your code here
+
+        if (this.books.size() < 2) {
+            return;
+        }
+
+        ArrayList<Book> sortedBooks = new ArrayList<>();
+
+        this.books.forEach( book -> {
+
+            double actualBookPrice = book.price;
+
+            if (sortedBooks.size() == 0) {
+                sortedBooks.add(book);
+                return;
+            }
+
+            if (actualBookPrice >= sortedBooks.get(0).price) {
+                sortedBooks.add(0, book);
+                return;
+            }
+
+            if (actualBookPrice < sortedBooks.get(sortedBooks.size()-1).price) {
+                sortedBooks.add(book);
+                return;
+            }
+
+            for (int i = 0; i < sortedBooks.size() - 1 ; i++) {
+
+                double priceBookBefore = sortedBooks.get(i).price;
+                double priceBookAfter = sortedBooks.get(i+1).price;
+
+                if (priceBookBefore > actualBookPrice && actualBookPrice >= priceBookAfter ) {
+                    sortedBooks.add(i+1, book);
+                    return;
+                }
+            }
+
+        });
+
+        this.books = sortedBooks;
     }
 
     /**
@@ -120,7 +157,9 @@ public class BookManager {
     public ArrayList<Book> searchByName(String keyword) {
         ArrayList<Book> matches = new ArrayList<>();
 
-        // TODO: your code here
+        this.books.forEach(book -> { 
+            if (book.name.toLowerCase().contains(keyword.toLowerCase())) matches.add(book);
+        });
 
         return matches;
     }
@@ -129,6 +168,24 @@ public class BookManager {
      * write this.books to file books.txt in required format
      */
     public void saveToFile() {
-        // TODO: your code here
+        try {
+
+			BufferedWriter bw = new BufferedWriter(new FileWriter("books.txt"));
+
+            StringBuilder bookStringBuilder = new StringBuilder();
+            this.books.forEach( book -> {
+                bookStringBuilder.append(book.toString());
+                bookStringBuilder.append("\n");
+            });
+
+            bw.write(bookStringBuilder.toString());
+
+			bw.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("\nAn error occured. Check your filename and your permissions.");
+		}
+
     }
 }
