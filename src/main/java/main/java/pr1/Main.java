@@ -4,30 +4,46 @@
 package main.java.pr1;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
-        BookManager bookManager = new BookManager();
+
+    private interface Command {
+        public void excecute();
+    }
+
+    BookManager bookManager;
+    Map<String, Command> commands = new HashMap<>();
+
+    public Main () {
+        bookManager = new BookManager();
 
         try {
             bookManager.loadFromFile();
 
-            System.out.println("***");
-
-            Book book1 = new Book(4, "ahihi", 10.02);
-
-            bookManager.add(book1);
-            bookManager.add(new Book(5, "ihaha", 100));
-            
-            bookManager.sortDescByPrice();
-
-            ArrayList<Book> matches = bookManager.searchByName("people");
-
-            bookManager.saveToFile();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        Command listAllBooks = () -> {
+            bookManager.printBooks(bookManager.getBooks());
+        };
+
+        commands.put("list all books", listAllBooks);
+
+    }
+    public static void main(String[] args) {
+
+        Main main = new Main();
+        main.showAllOption();
+    }
+
+    public void showAllOption() {
+        this.commands.keySet().forEach(action -> {
+            System.out.println(action);
+        });
     }
 }

@@ -37,7 +37,7 @@ public class BookManager {
 
                 int id = Integer.parseInt(line.substring(0, 5).trim());
                 String name = line.substring(5, 50).trim();
-                Double price = Double.parseDouble(line.substring(50, 60).trim());
+                double price = Double.parseDouble(line.substring(50, 62).trim());
 
                 Book book = new Book(id, name, price);
                 add(book);
@@ -63,6 +63,8 @@ public class BookManager {
         if (books.isEmpty()) {
             System.out.println("(empty)");
         } else {
+            System.out.printf( "%-5s %-45s %-10s", "ID", "Name", "Price");
+            System.out.println("\n");
             books.forEach(book -> {
                 System.out.println(book.toString());
             });
